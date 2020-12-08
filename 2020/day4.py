@@ -12,24 +12,56 @@ def get_passports():
     return [PASSPORT_FIELDS_RE.findall(l) for l in raw_data]
 
 
+VALID_EYE_COLORS = ('amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth')
+VALID_HAIR_COLOR_RE = re.compile('^#[0-9a-f]{6}$')
+VALID_PASSPORT_ID_RE = re.compile('^\d{9}$')
+HEIGHT_RE = re.compile('^(?P<value>\d+)(?P<units>cm|in)$')
+INVALID_YEAR = 'A'
+
+
 def validate_passport(raw_passport):
-    #     byr (Birth Year)
-    #     iyr (Issue Year)
-    #     eyr (Expiration Year)
-    #     hgt (Height)
-    #     hcl (Hair Color)
-    #     ecl (Eye Color)
-    #     pid (Passport ID)
-    #     cid (Country ID)
-    # We can skip cid and still consider it valid
+    # cid (Country ID) - ignored, missing or not.
     passport = dict(raw_passport)
-    # passport_keys = []
-    # passport_values = []
-    # for key, value in raw_passport:
-    #     passport_keys.append(key)
-    #     passport_values.append(value)
-    # print(passport_keys)
-    return all(f in passport for f in VALID_FIELDS)
+    if all(f in passport for f in VALID_FIELDS):
+        try:
+            _byr = int(passport.get('byr', INVALID_YEAR))
+        except ValueError:
+            return False
+        try:
+            _iyr = int(passport.get('iyr', INVALID_YEAR))
+        except ValueError:
+            return False
+        try:
+            _eyr = int(passport.get('eyr', INVALID_YEAR))
+        except ValueError:
+            return False
+        try:
+            _hgt = HEIGHT_RE.search(passport['hgt']).groupdict()
+        except AttributeError:
+            return False
+        else:
+            # hgt (Height) - a number followed by either cm or in:
+            #     If cm, the number must be at least 150 and at most 193.
+            #     If in, the number must be at least 59 and at most 76.
+            tallness = int(_hgt['value'])
+            if _hgt['units'] == 'cm':
+                if not (150 <= tallness <= 193):
+                    return False
+            elif _hgt['units'] == 'in':
+                if not (59 <= tallness <= 76):
+                    return False
+
+        # byr (Birth Year) - four digits; at least 1920 and at most 2002.
+        # iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+        # eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+        return (1920 <= _byr <= 2002) and (2010 <= _iyr <= 2020) and (2020 <= _eyr <= 2030) and \
+               VALID_HAIR_COLOR_RE.search(passport['hcl']) and VALID_PASSPORT_ID_RE.search(passport['pid']) and \
+               passport['ecl'] in VALID_EYE_COLORS
+        # hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+        # ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+        # pid (Passport ID) - a nine-digit number, including leading zeroes.
+    else:
+        return False
 
 
 def part1():
