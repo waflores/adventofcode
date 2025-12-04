@@ -8,6 +8,12 @@ module(name = "advent_of_code_monorepo")
 bazel_dep(name = "rules_python", version = "1.7.0")
 
 # TODO(@waflores): setup python
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    is_default = True,
+    python_version = "3.14",
+)
+
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "pypi",
@@ -15,3 +21,5 @@ pip.parse(
     requirements_lock = "//:requirements.txt",
 )
 use_repo(pip, "pypi")
+
+bazel_dep(name = "bazel_env.bzl", version = "0.5.0")
