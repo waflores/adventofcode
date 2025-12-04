@@ -5,4 +5,12 @@ py_binary(
     srcs = [
         "day1.py",
     ],
+    data = [
+        "day1_part1_input.txt",
+    ],
+    visibility = ["//visibility:public"],
+    deps = ["@rules_python//python/runfiles"],
+    # env = {
+    #     "PYTHONINSPECT": "1",
+    # },
 )
