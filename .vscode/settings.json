@@ -3,5 +3,7 @@
         "activityBar.background": "#200E92",
         "titleBar.activeBackground": "#2D14CC",
         "titleBar.activeForeground": "#FDFDFF"
-    }
+    },
+    "bazel.buildifierFixOnFormat": true,
+    "bazel.buildifierExecutable": "C:\\ProgramData\\chocolatey\\bin\\buildifier.exe"
 }
