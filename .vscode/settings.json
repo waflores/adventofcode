@@ -5,5 +5,8 @@
         "titleBar.activeForeground": "#FDFDFF"
     },
     "bazel.buildifierFixOnFormat": true,
-    "bazel.buildifierExecutable": "C:\\ProgramData\\chocolatey\\bin\\buildifier.exe"
+    "bazel.buildifierExecutable": "C:\\ProgramData\\chocolatey\\bin\\buildifier.exe",
+    "yaml.schemas": {
+        "https://www.schemastore.org/clang-format-21.x.json": "file:///c%3A/Users/Will/PycharmProjects/AdventOfCode/.clang-format"
+    }
 }

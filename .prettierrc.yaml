@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=https://www.schemastore.org/prettierrc.json
+tabWidth: 4
+useTabs: false
+plugins:
+  - "@1stg/prettier-config"
