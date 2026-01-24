@@ -1,4 +1,5 @@
 .direnv/
 .idea/
 .venv/
-bazel-*/
+bazel-*
+.vscode
